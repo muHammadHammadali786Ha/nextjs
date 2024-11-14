@@ -30,7 +30,7 @@ const AuthProvider = ({children}) =>{
         const getUserData = JSON.parse( sessionStorage.getItem("userData"));
         const getUserToken = sessionStorage.getItem("token");
         
-        if (getUserData,getUserToken) {
+        if (getUserData && getUserToken) {
             setAuth({token:getUserToken,user:getUserData});
         }
 

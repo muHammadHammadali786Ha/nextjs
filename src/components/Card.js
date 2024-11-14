@@ -8,7 +8,7 @@ const Card = () => {
     const [jobListing,setJobListin] = useState([]);
     const getData = async () =>{
       const response = await axios.get('https://www.arbeitnow.com/api/job-board-api');
-      console.log("Response ",response.data);
+      // console.log("Response ",response.data);
       setJobListin(response.data.data)
       
     }
@@ -28,9 +28,9 @@ const Card = () => {
                   <p>Location : {item.location}</p>
                   <p className='flex gap-4'>JobType : {item.job_types.map((item,index)=>{
                     return(
-                      <>
-                        <span key={index}>{item}</span>
-                      </>
+                      <span key={index}>
+                        {item}
+                      </span>
                     )
                   })}</p>
                   <p>Salary : {item.salary}</p>

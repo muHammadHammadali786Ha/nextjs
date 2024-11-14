@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import AuthProvider from "@/context/store";
+// const Navbar = dynamic(() => import('../components/Navbar'), { ssr: false });
+// const AuthProvider = dynamic(() => import("@/context/store"), { ssr: false });
 // const Navbar = dynamic(() => import('../components/Navbar'), { ssr: false })
 
 const geistSans = localFont({
@@ -27,17 +29,17 @@ export const metadata = {
 export default function RootLayout({ children,pageProps }) {
 
   return (
+       <AuthProvider >
     <html lang="en">
       <body 
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F8F9FA] px-10`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F8F9FA] px-10`} suppressHydrationWarning={true}
       >
-       <AuthProvider >
        <div>
         <Navbar />
         {children}
        </div>
-       </AuthProvider>
       </body>
     </html>
+       </AuthProvider>
   );
 }

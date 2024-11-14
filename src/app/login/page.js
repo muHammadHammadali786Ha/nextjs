@@ -22,10 +22,10 @@ const Login = () => {
 
     e.preventDefault();
 
-    console.log(userData);
+    // console.log(userData);
     
     const response = await axios.post('http://localhost:7001/api/users/login',userData);
-   console.log(response.data);
+  //  console.log(response.data);
    if (response.data.success == true) {
       login(response.data.user,response.data.token);
       router.push('/');
@@ -37,7 +37,7 @@ const Login = () => {
   return (
     <>
 
-    <div className='flex justify-center items-center  min-h-screen' suppressHydrationWarning={true}>
+    <div className='flex justify-center items-center  min-h-screen'>
       <form className='w-[400px] flex flex-col gap-5 py-4 px-4 shadow-lg rounded-md bg-[#F8F9FA]' onSubmit={onSubmitHandler}>
         <h1 className='text-center text-3xl font-bold'>Login Now</h1>
       
@@ -64,7 +64,7 @@ const Login = () => {
         </div>
 
         <div>
-          <p className=''>If you have not account  <Link href={'/signup'} className='text-blue-500 font-bold'>Sign up</Link> </p>
+          <p className=''>If you have not account </p> <Link href={'/signup'} className='text-blue-500 font-bold'>Sign up</Link> 
         </div>
       </form>
 
