@@ -19,3 +19,16 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 } */
+/* Ensure the html and body elements allow scrolling */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-y: auto;   /* Enable vertical scroll when content overflows */
+}
+
+/* Ensure the flex container grows and causes scroll if needed */
+.flex-grow {
+  flex-grow: 1;
+}
+

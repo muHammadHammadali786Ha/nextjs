@@ -1,41 +1,100 @@
 'use client'
+import { AuthContext } from '@/context/store';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'
-import React from 'react'
+import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
+import { 
+  FiUser, 
+  FiBriefcase, 
+  FiFileText, 
+  FiBarChart2,
+  FiSettings,
+  FiLogOut,
+  FiHome
+} from 'react-icons/fi';
 
 const Sidebar = () => {
+    const { auth, logout } = useContext(AuthContext);
     const router = useRouter();
-  
-    const menuItems = [
-        { name: 'Dashboard Overview', route: '/dashboard' },
-        { name: 'Jobs Posting', route: '/dashboard/jobpost' },
-        { name: 'Applications', route: '/dashboard/application' },
-        { name: 'Interview Schedule', route: '/dashboard/interview' },
-        { name: 'Analytics & Insights', route: '/dashboard/analytics' },
-        { name: 'Profile Management', route: '/dashboard/profile' },
+
+    const employerMenu = [
+        { name: 'Dashboard', route: '/dashboard', icon: <FiHome className="w-5 h-5" /> },
+        { name: 'Profile', route: '/dashboard/profile', icon: <FiUser className="w-5 h-5" /> },
+        { name: 'Interviews', route: '/dashboard/interview', icon: <FiUser className="w-5 h-5" /> },
+        { name: 'Post Jobs', route: '/dashboard/jobpost', icon: <FiBriefcase className="w-5 h-5" /> },
+        { name: 'Applications', route: '/dashboard/application', icon: <FiFileText className="w-5 h-5" /> },
     ];
 
-    return (
-        <div className='flex gap-2'>
-            {/* Sidebar */}
-            <div className='hidden w-64 md:w-80 md:flex flex-col gap-10 py-5 px-12 bg-[#343A40] text-white min-h-screen rounded-md'>
-                <h2 className='text-xl font-bold text-primary'>Employer Dashboard</h2>
+    const studentMenu = [
+        { name: 'Dashboard', route: '/dashboard', icon: <FiHome className="w-5 h-5" /> },
+        { name: 'Profile', route: '/dashboard/profile', icon: <FiUser className="w-5 h-5" /> },
+        { name: 'My Skills', route: '/dashboard/skills', icon: <FiBarChart2 className="w-5 h-5" /> },
+        { name: 'Job Board', route: '/dashboard/jobs', icon: <FiBriefcase className="w-5 h-5" /> },
+        { name: 'Applications', route: '/dashboard/application', icon: <FiFileText className="w-5 h-5" /> },
+        { name: 'Analytics', route: '/dashboard/analytics', icon: <FiBarChart2 className="w-5 h-5" /> },
+    ];
 
+    const handleLogout = () => {
+        logout();
+        router.push('/login');
+    };
+
+    const menuItems = auth.user.role === 'employee' ? employerMenu : studentMenu;
+
+    return (
+        <div className="hidden md:flex md:w-64 lg:w-72 flex-col bg-white border-r border-gray-200 min-h-screen">
+            {/* Sidebar Header */}
+            <div className="p-6 pb-2">
+                <h2 className="text-xl font-bold text-gray-800">
+                    {auth.user?.role === 'employee' ? 'Employer' : 'Student'} Dashboard
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                    {auth.user?.username || 'Welcome back'}
+                </p>
+            </div>
+
+            {/* Navigation Items */}
+            <nav className="flex-1 px-4 py-6 space-y-1">
                 {menuItems.map((item, index) => (
-                    <Link    
-                        key={index} 
-                        className='flex gap-2 cursor-pointer' 
-                        href={ item.route }
+                    <Link
+                        key={index}
+                        href={item.route}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
+                            router.pathname === item.route
+                                ? 'bg-blue-50 text-blue-600 font-medium'
+                                : 'text-gray-600 hover:bg-gray-100'
+                        }`}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
-                        </svg>
+                        <span className={`${router.pathname === item.route ? 'text-blue-500' : 'text-gray-500'}`}>
+                            {item.icon}
+                        </span>
                         <span>{item.name}</span>
+                        {router.pathname === item.route && (
+                            <span className="ml-auto h-2 w-2 rounded-full bg-blue-500"></span>
+                        )}
                     </Link>
                 ))}
+            </nav>
+
+            {/* Bottom Section */}
+            <div className="p-4 border-t border-gray-200 space-y-2">
+                <Link
+                    href="/dashboard/settings"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                    <FiSettings className="w-5 h-5 text-gray-500" />
+                    <span>Settings</span>
+                </Link>
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors text-left"
+                >
+                    <FiLogOut className="w-5 h-5 text-gray-500" />
+                    <span>Logout</span>
+                </button>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Sidebar;

@@ -1,14 +1,16 @@
 'use client'
 const { createContext, useState, useEffect } = require("react");
-
+import { useRouter } from "next/navigation"
 export const AuthContext = createContext();
 
+// const router = useRouter();
 
 const AuthProvider = ({children}) =>{
 
+    const [loading, setLoading] = useState(true);
     const [auth, setAuth] = useState({
-        token: typeof window !== "undefined" ? sessionStorage.getItem("token") : null,
-        user: typeof window !== "undefined" ? JSON.parse(sessionStorage.getItem("user")) : null,
+        token: typeof window !== "undefined" ? sessionStorage.getItem("token") : false,
+        user: typeof window !== "undefined" ? JSON.parse(sessionStorage.getItem("user")) : false,
       })
 
     const login = (userData,token)=>{
@@ -21,9 +23,10 @@ const AuthProvider = ({children}) =>{
     };
     
     const logout = () => {
-        setAuth({ token: null, user: null });
+        setAuth({ token: "", user: "" });
         sessionStorage.removeItem("user");
         sessionStorage.removeItem("token");
+        // router.push('/login');
     };
     
     useEffect(()=>{
@@ -33,8 +36,13 @@ const AuthProvider = ({children}) =>{
         if (getUserData && getUserToken) {
             setAuth({token:getUserToken,user:getUserData});
         }
+        setLoading(false);
 
     },[]);
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
     return(
         <AuthContext.Provider value={{auth,login,logout}} >
